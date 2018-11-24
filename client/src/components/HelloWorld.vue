@@ -1,5 +1,6 @@
 <template>
   <div class="hello">
+    <input v-model="msg" type="text" placeholder="Enter your search term:" onKeyUp="search()"/>
     <h1>{{ msg }}</h1>
     <p>
       For a guide and recipes on how to configure / customize this project,<br>

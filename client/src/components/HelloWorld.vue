@@ -1,6 +1,6 @@
 <template>
   <div class="hello">
-    <input v-model="msg" type="text" placeholder="Enter your search term:" onKeyUp="search()"/>
+    <input v-model="msg" type="text" placeholder="Enter your search term:"/>
     <h1>{{ msg }}</h1>
     <p>
       For a guide and recipes on how to configure / customize this project,<br>
@@ -36,7 +36,13 @@ export default {
   name: 'HelloWorld',
   props: {
     msg: String
+  },
+  watch: {
+      msg: function (value) {
+          console.log(value)
+      }
   }
+
 }
 </script>
 

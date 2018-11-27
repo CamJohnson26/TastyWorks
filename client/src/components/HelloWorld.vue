@@ -2,6 +2,7 @@
   <div class="hello">
     <input v-model="msg" type="text" placeholder="Enter your search term:"/>
     <h1>{{ msg }}</h1>
+    <span>{{results}}</span>
     <p>
       For a guide and recipes on how to configure / customize this project,<br>
       check out the
@@ -32,14 +33,28 @@
 </template>
 
 <script>
+  import axios from 'axios';
+
 export default {
   name: 'HelloWorld',
-  props: {
-    msg: String
-  },
+  data: () => {
+    return {
+    msg: String,
+    results: Object
+  }
+},
   watch: {
       msg: function (value) {
-          console.log(value)
+        axios.get('/data')
+            .then((res) => {
+                console.log(res)
+                this.results = res
+            })
+            .catch((error) => {
+                if (error.response.status === 401) {
+                  console.log(error)
+                }
+            })
       }
   }
 

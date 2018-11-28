@@ -9,8 +9,8 @@ var stocks = [];
 loadData();
 
 /* GET home page. */
-router.get('/:SEARCH_STRING', function(req, res, next) {
-    res.json(JSON.stringify(stocks.filter((obj) => obj["Name"].includes(req.params.SEARCH_STRING))));
+router.get('/', function(req, res, next) {
+    res.json(JSON.stringify(stocks));
 });
 
 module.exports = router;
@@ -24,8 +24,8 @@ function loadData() {
     var testFolder = path.join(__dirname, "../data");
 
     fs.readdir(testFolder, (err, files) => {
-
         for (var file in files) {
+            console.log(files[file]);
 
             fs.createReadStream(path.join(testFolder, files[file]))
                 .pipe(parse())
@@ -38,6 +38,7 @@ function loadData() {
                     }
                 })
                 .on('end', function () {
+                    console.log(stocks.filter((s) => s["Name"].includes("Face")))
                 });
         }
     })

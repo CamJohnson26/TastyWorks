@@ -1,11 +1,22 @@
 <template>
-  <div class="hello">
-    <input v-model="msg" type="text" placeholder="Enter your search term:"/>
-    <input v-model="symbol" type="text" placeholder="TSLA"/>
-    <h1>{{ msg }}</h1>
-    <div id="chartContainer" style="height: 300px; width: 100%;"></div>
-    <span>{{stock_results}}</span>
-    <span>{{results}}</span>
+  <div class="container-fluid">
+    <h1>TastyWorks Coding Project</h1>
+    <div class="dropdown nav-item">
+      <input
+              v-model="msg"
+              class="dropdown-toggle form-control live-search-box"
+              id="quicksearch"
+              data-toggle="dropdown"
+              aria-haspopup="true"
+              aria-expanded="false"
+              placeholder="Company Name/Stock Symbol">
+      <div class="dropdown-menu" v-bind:class="{ show: showSearchResults }">
+        <li v-for="stock in stock_search">
+          <button class="btn" v-on:click="msg = stock.Name; symbol = stock.Symbol; showSearchResults = false">{{stock.Symbol}} {{stock.Name}}</button>
+        </li>
+      </div>
+    </div>
+    <div id="chartContainer" style="height: 500px; width: 100%;"></div>
   </div>
 </template>
 
@@ -16,25 +27,38 @@ export default {
   name: 'HelloWorld',
   data: () => {
     return {
-      msg: "",
-      results: Object,
-        symbol: "TSLA",
-        stock_results: Object
+        msg: "",
+        stocks: Object,
+        stock_search: Object,
+        symbol: "",
+        stock_results: [],
+        showSearchResults: false
   }
 },
+
+    beforeMount(){
+        this.getStocks()
+    },
+    methods: {
+      getStocks: function() {
+
+          axios.get('/data')
+              .then((res) => {
+                  console.log(res)
+                  this.stocks = JSON.parse(res["data"])
+              })
+              .catch((error) => {
+                  if (error.response.status === 401) {
+                      console.log(error)
+                  }
+              })
+      }
+  },
   watch: {
       msg: function (value) {
-          console.log(value)
-        axios.get('/data/' + value)
-            .then((res) => {
-                console.log(res)
-                this.results = res["data"]
-            })
-            .catch((error) => {
-                if (error.response.status === 401) {
-                  console.log(error)
-                }
-            })
+          var searchTerm = value.toLowerCase();
+          this.stock_search = this.stocks.filter((stock) => stock["Name"].toLowerCase().includes(searchTerm) || stock["Symbol"].toLowerCase().includes(searchTerm))
+          this.showSearchResults = this.stock_search.length > 1 || (this.stock_search.length == 1 && value !== this.stock_search[0].Name);
       },
       symbol: function (value) {
           console.log(value)
@@ -70,7 +94,10 @@ export default {
                       data: [{
                           type: "candlestick",
                           yValueFormatString: "$##0.00",
-                          dataPoints: dataPoints
+                          dataPoints: dataPoints,
+                          risingColor: "#00FF00",
+                          fallingColor: "#FF0000",
+                          color:"#000000"
                       }]
                   });
                   res["data"].forEach((data_point) => {
@@ -105,7 +132,41 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
+<style>
+  body {
+    background-color: #32373a;
+    color: #fff;
+  }
+  .btn {
+    background-color: #000;
+    color: #00FF00;
+  }
+  .container-fluid {
+    width: 100%;
+    padding-right: 30px;
+    padding-left: 30px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  .live-search-box {
+    margin-left: auto;
+    margin-right: auto;
+    width: 75%;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    text-align: left;
+  }
+  .dropdown-menu {
+    background-color: #32373a;
+    width: 75%;
+    margin-left:12.5%;
+  }
+  .dropdown-menu li {
+    margin-top: 4px;
+  }
+  h1, h2, h3 {
+    color:#FFFFFF;
+  }
 h3 {
   margin: 40px 0 0;
 }

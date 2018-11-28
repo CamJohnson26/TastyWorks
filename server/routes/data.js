@@ -17,7 +17,6 @@ module.exports = router;
 
 
 function loadData() {
-    console.log("Data Loaded");
 
     stocks = [];
 
@@ -25,7 +24,6 @@ function loadData() {
 
     fs.readdir(testFolder, (err, files) => {
         for (var file in files) {
-            console.log(files[file]);
 
             fs.createReadStream(path.join(testFolder, files[file]))
                 .pipe(parse())
@@ -36,9 +34,6 @@ function loadData() {
                     catch (err) {
                         console.log(err);
                     }
-                })
-                .on('end', function () {
-                    console.log(stocks.filter((s) => s["Name"].includes("Face")))
                 });
         }
     })

@@ -9,8 +9,8 @@ var stocks = [];
 loadData();
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-    res.json(JSON.stringify(stocks));
+router.get('/:SEARCH_STRING', function(req, res, next) {
+    res.json(JSON.stringify(stocks.filter((obj) => obj["Name"].includes(req.params.SEARCH_STRING))));
 });
 
 module.exports = router;

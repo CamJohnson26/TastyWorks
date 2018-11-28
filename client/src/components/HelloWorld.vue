@@ -45,10 +45,11 @@ export default {
 },
   watch: {
       msg: function (value) {
-        axios.get('/data')
+          console.log(value)
+        axios.get('/data/' + value)
             .then((res) => {
                 console.log(res)
-                this.results = res
+                this.results = res["data"]
             })
             .catch((error) => {
                 if (error.response.status === 401) {

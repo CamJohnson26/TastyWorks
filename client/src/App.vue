@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <HelloWorld msg="This si a test"/>
+    <HelloWorld msg="This si a test" symbol="TSLA"/>
   </div>
 </template>
 

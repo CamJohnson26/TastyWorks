@@ -1,6 +1,7 @@
 <template>
   <div class="hello">
     <input v-model="msg" type="text" placeholder="Enter your search term:"/>
+    <input v-model="symbol" type="text" placeholder="TSLA"/>
     <h1>{{ msg }}</h1>
     <span>{{results}}</span>
     <p>
@@ -39,8 +40,9 @@ export default {
   name: 'HelloWorld',
   data: () => {
     return {
-    msg: String,
-    results: Object
+      msg: String,
+      results: Object,
+        symbol: String
   }
 },
   watch: {
@@ -56,6 +58,19 @@ export default {
                   console.log(error)
                 }
             })
+      },
+      symbol: function (value) {
+          console.log(value)
+          axios.get('https://api.iextrading.com/1.0/stock/' + value + "/chart/6m")
+              .then((res) => {
+                  console.log(res)
+                  this.results = res["data"]
+              })
+              .catch((error) => {
+                  if (error.response.status === 401) {
+                      console.log(error)
+                  }
+              })
       }
   }
 

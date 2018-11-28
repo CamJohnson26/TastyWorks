@@ -3,7 +3,6 @@
     <HelloWorld msg="This si a test" symbol="TSLA"/>
   </div>
 </template>
-
 <script>
 import HelloWorld from './components/HelloWorld.vue'
 
